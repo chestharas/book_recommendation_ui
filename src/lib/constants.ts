@@ -79,8 +79,8 @@ export const BOOK_CATEGORIES = [
 
 // App metadata
 export const APP_META = {
-  name: 'BookRec',
-  title: 'BookRec | AI-Powered Book Recommendations',
+  name: 'Hello kon papa',
+  title: 'Hello kon papa | AI-Powered Book Recommendations',
   description: 'Discover your next favorite book with AI-powered recommendations tailored to your reading preferences.',
   keywords: 'books, recommendations, reading, AI, machine learning, literature',
 };
