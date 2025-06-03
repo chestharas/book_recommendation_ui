@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Search, Filter, X, BookOpen, Star, User } from 'lucide-react'
+import React, { useState, useCallback } from 'react'
+import { Search, Filter, X, BookOpen } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { BookGrid } from '@/components/BookGrid'
+import { SearchBar } from '@/components/SearchBar'
 import { useSearch } from '@/hooks/useSearch'
 
 interface SearchFilters {
@@ -16,10 +17,9 @@ interface SearchFilters {
 }
 
 export default function SearchPage() {
-  const [query, setQuery] = useState('')
   const [filters, setFilters] = useState<SearchFilters>({})
-  const [showFilters, setShowFilters] = useState(false)
   const [activeTab, setActiveTab] = useState<'search' | 'filter'>('search')
+  const [currentQuery, setCurrentQuery] = useState('')
   
   const { 
     books, 
@@ -30,28 +30,25 @@ export default function SearchPage() {
     clearResults 
   } = useSearch()
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSearchQuery = useCallback((query: string) => {
+    setCurrentQuery(query)
     if (query.trim()) {
-      searchBooks(query)
+      searchBooks(query.trim())
+    } else {
+      clearResults()
     }
-  }
+  }, [searchBooks, clearResults])
 
-  const handleFilterSearch = () => {
+  const handleFilterSearch = useCallback(() => {
     filterBooks(filters)
-  }
+  }, [filters, filterBooks])
 
-  const clearSearch = () => {
-    setQuery('')
-    clearResults()
-  }
-
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setFilters({})
     clearResults()
-  }
-  const hasActiveFilters = Object.values(filters ?? {}).some(value =>
-//   const hasActiveFilters = Object.values(filters).some(value =>
+  }, [clearResults])
+
+  const hasActiveFilters = Object.values(filters).some(value =>
     value !== undefined && value !== null && value !== ''
   )
 
@@ -99,32 +96,16 @@ export default function SearchPage() {
       {activeTab === 'search' && (
         <Card className="mb-8">
           <CardContent className="p-6">
-            <form onSubmit={handleSearch} className="space-y-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search by title, author, or keywords..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-lg"
-                />
-                {query && (
-                  <button
-                    type="button"
-                    onClick={clearSearch}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                )}
+            <SearchBar 
+              onSearch={handleSearchQuery}
+              placeholder="Search by title, author, or keywords..."
+              className="mb-4"
+            />
+            {loading && (
+              <div className="text-center text-gray-600">
+                Searching...
               </div>
-              <div className="flex gap-3">
-                <Button type="submit" disabled={loading || !query.trim()} className="flex-1">
-                  {loading ? 'Searching...' : 'Search Books'}
-                </Button>
-              </div>
-            </form>
+            )}
           </CardContent>
         </Card>
       )}
@@ -147,8 +128,8 @@ export default function SearchPage() {
                     max="5"
                     step="0.1"
                     value={filters.minRating || ''}
-                    onChange={(e) => setFilters(f => ({ 
-                      ...f, 
+                    onChange={(e) => setFilters(prev => ({ 
+                      ...prev, 
                       minRating: e.target.value ? parseFloat(e.target.value) : undefined 
                     }))}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -160,8 +141,8 @@ export default function SearchPage() {
                     max="5"
                     step="0.1"
                     value={filters.maxRating || ''}
-                    onChange={(e) => setFilters(f => ({ 
-                      ...f, 
+                    onChange={(e) => setFilters(prev => ({ 
+                      ...prev, 
                       maxRating: e.target.value ? parseFloat(e.target.value) : undefined 
                     }))}
                     className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -178,7 +159,10 @@ export default function SearchPage() {
                   type="text"
                   placeholder="e.g., Fiction, Mystery, Romance"
                   value={filters.genre || ''}
-                  onChange={(e) => setFilters(f => ({ ...f, genre: e.target.value || undefined }))}
+                  onChange={(e) => setFilters(prev => ({ 
+                    ...prev, 
+                    genre: e.target.value || undefined 
+                  }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
@@ -192,7 +176,10 @@ export default function SearchPage() {
                   type="text"
                   placeholder="Author name"
                   value={filters.author || ''}
-                  onChange={(e) => setFilters(f => ({ ...f, author: e.target.value || undefined }))}
+                  onChange={(e) => setFilters(prev => ({ 
+                    ...prev, 
+                    author: e.target.value || undefined 
+                  }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
@@ -207,8 +194,8 @@ export default function SearchPage() {
                   placeholder="e.g., 100"
                   min="0"
                   value={filters.minRatingsCount || ''}
-                  onChange={(e) => setFilters(f => ({ 
-                    ...f, 
+                  onChange={(e) => setFilters(prev => ({ 
+                    ...prev, 
                     minRatingsCount: e.target.value ? parseInt(e.target.value) : undefined 
                   }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -260,7 +247,7 @@ export default function SearchPage() {
       )}
 
       {/* Empty State */}
-      {!loading && books.length === 0 && (query || hasActiveFilters) && (
+      {!loading && books.length === 0 && (currentQuery || hasActiveFilters) && (
         <Card className="text-center py-12">
           <CardContent>
             <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -273,7 +260,7 @@ export default function SearchPage() {
             <Button 
               variant="secondary" 
               onClick={() => {
-                clearSearch()
+                setCurrentQuery('')
                 clearFilters()
                 setActiveTab('search')
               }}
@@ -285,7 +272,7 @@ export default function SearchPage() {
       )}
 
       {/* Initial State */}
-      {!loading && books.length === 0 && !query && !hasActiveFilters && (
+      {!loading && books.length === 0 && !currentQuery && !hasActiveFilters && (
         <Card className="text-center py-12">
           <CardContent>
             <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
