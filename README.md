@@ -33,7 +33,7 @@ This is a frontend web application built with **Next.js**, designed to provide p
 ### 📦 Installation
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/chestharas/book_recommendation_ui.git
 cd your-repo
 npm install
 
