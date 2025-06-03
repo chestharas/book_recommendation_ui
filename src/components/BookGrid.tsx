@@ -8,7 +8,8 @@ interface BookGridProps {
   className?: string
 }
 
-export function BookGrid({ books, loading, className }: BookGridProps) {
+// export function BookGrid({ books, loading, className }: BookGridProps) {
+export function BookGrid({ books = [], loading, className }: BookGridProps) {
   if (loading) {
     return (
       <div className={`grid gap-4 ${className}`}>

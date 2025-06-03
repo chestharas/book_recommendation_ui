@@ -23,7 +23,7 @@ interface FilterPanelProps {
 }
 
 export function FilterPanel({ 
-  filters, 
+  filters = {}, 
   selectedFilters, 
   onFilterChange, 
   onClearFilters 
@@ -37,7 +37,11 @@ export function FilterPanel({
     onFilterChange(filterType, newValues)
   }
 
-  const hasActiveFilters = Object.values(selectedFilters).some(values => values.length > 0)
+  // const hasActiveFilters = Object.values(selectedFilters).some(values => values.length > 0)
+  const hasActiveFilters = Object.values(selectedFilters ?? {}).some(
+  (values) => Array.isArray(values) && values.length > 0
+)
+
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
