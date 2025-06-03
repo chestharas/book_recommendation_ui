@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📚 Book Recommendation System
 
-## Getting Started
+This is a frontend web application built with **Next.js**, designed to provide personalized book recommendations using **TF-IDF (Term Frequency–Inverse Document Frequency)**. The model leverages book metadata scraped from the [Best Books Ever list on Goodreads](https://www.goodreads.com/list/show/1.Best_Books_Ever).
 
-First, run the development server:
+> ⚠️ Note: This project primarily focuses on the **recommendation feature**. Other functionalities such as search and navigation may be partially implemented or contain known issues.
+
+---
+
+## 🧠 Project Overview
+
+### 🔍 Data Source
+- Scraped from: [Goodreads - Best Books Ever](https://www.goodreads.com/list/show/1.Best_Books_Ever)
+- Collected data includes: Book titles, authors, genres, ratings, and descriptions.
+
+### 📈 Recommendation Model
+- The **TF-IDF** algorithm is used to compute similarity between books based on textual metadata such as descriptions.
+- Recommendations are served through a REST API or loaded from local JSON files.
+- 👉 For full details on the recommendation model, visit the [Backend Repository](https://github.com/chestharas/book_recommendation_api).
+
+### 🎯 Frontend Objective
+- Provide a clean, responsive user interface focused solely on delivering book recommendations.
+- Users can select or input a book title to receive a list of similar books.
+
+---
+
+## 🚀 Getting Started
+
+### 🔧 Prerequisites
+
+- Node.js (v18 or later)
+- npm or yarn
+
+### 📦 Installation
 
 ```bash
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+npm install
+
+# Run 
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open your browser and navigate to:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🗂️ Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+/components       → Reusable UI components
+/pages            → Application pages and routes
+/styles           → Global and component-level styling
+/public           → Static assets
+/utils            → TF-IDF helpers and utility functions
+/data             → (Optional) Preloaded or mock book data
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧪 Example Usage
 
-## Deploy on Vercel
+1. Launch the app.
+2. Select or type in a book title.
+3. View a list of recommended books generated using TF-IDF similarity.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ⚠️ Known Issues
+
+* 🔍 **Search functionality** may be incomplete or inconsistent.
+* 🧭 **Navigation and filters** are under development or not fully functional.
+* 🔌 Backend API (if applicable) should be running in parallel for dynamic data.
+
+---
+
+## 📚 Future Improvements
+
+* Implement cosine similarity for better vector-based comparison.
+* Fully integrate a live backend with updated book data and scraping capabilities.
+* Enhance UI/UX with better interaction and accessibility.
+* Add filters for genre, author, and user ratings.
+
+---
+
+## 📝 License
+
+This project is open-source and licensed under the [MIT License](LICENSE).
+
+---
+
+## 🤝 Acknowledgments
+
+* [Goodreads](https://www.goodreads.com/) for providing publicly accessible book listings.
+* [Scikit-learn](https://scikit-learn.org/) for TF-IDF modeling (used in the backend).
+* Inspiration from traditional content-based recommendation systems.
